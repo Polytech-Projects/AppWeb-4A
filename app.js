@@ -7,11 +7,13 @@ var bcrypt = require('bcryptjs');
 
 var dataTaskLayer = require('./dataTaskLayer.js');
 var dataUserLayer = require('./dataUserLayer.js');
+var config = require('./config.js')
 
 var app = express();
-var port = 8095;
+var port = config.nodePort;
 
-var superSecret = 'supersecret';
+// Sert à la création d'un token pour l'authentification
+var superSecret = config.tokenSecret;
 
 app.use(function(req, res, next) {
     // Permition connection
@@ -211,7 +213,7 @@ app.put('/user/:id', function (req, res) {
 
 app.get('/me', verifyToken, function(req, res, next) {
     dataUserLayer.findUserById(req.user_id, function (user) {
-        if (!user) return res.status(404).send("No user found.");
+        if (!user) return res.send("No user found.");
         
         res.status(200).send(user);
     });
@@ -219,9 +221,11 @@ app.get('/me', verifyToken, function(req, res, next) {
 
 app.post('/login', function(req, res) {
     dataUserLayer.findUserByIdWithPwd(req.body._id, function (user) {
-        if (!user) return res.status(500).send({ success: false, errorSet: ['NO_EXISTING_USER'] });
+        if (!user) return res.send({ success: false, errorSet: ['NO_EXISTING_USER'] });
+
         var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-        if (!passwordIsValid) return res.status(401).send({ success: false, token: null });
+        if (!passwordIsValid) return res.send({ success: false, token: null });
+
         var token = jwt.sign({ id: user._id }, superSecret, {
             expiresIn: 86400 // expires in 24 hours
         });

@@ -35,7 +35,7 @@ routingApp.controller('todoListCtrl', ['$scope', '$http', 'todoService', functio
 
     $scope.delete = function(task){
         var index = $scope.taskList.indexOf(task);
-        // On vire direct la tache sans attendre de retour serveur
+        // On supprime la tache sans attendre de retour serveur
         $scope.taskList.splice(index,1);
         todoService.deleteTask(task._id, function(res){
             $scope.load();

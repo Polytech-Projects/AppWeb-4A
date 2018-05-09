@@ -8,8 +8,6 @@ routingApp.factory('todoService', ['$http', '$state', 'userService', function($h
         };
 
         $http.post('/addTask',req).then(function (resp) {
-            console.log('todoService: requete HTTP ->');
-            console.log(req);
             cb(resp);
         });
 

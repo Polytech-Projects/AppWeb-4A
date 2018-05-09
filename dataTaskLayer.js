@@ -1,12 +1,7 @@
-var mongoose = require('mongoose');
+var mongoose = require('./config_db.js');
+mongoose = mongoose.mongoose;
 var Schema = mongoose.Schema;
 var uuidv4 = require('uuid-v4');
-
-mongoose.connect('mongodb://localhost/tp_6', function(err) {
-    if(err) {throw err;}
-    else
-        console.log('mongo connected');
-});
 
 var TaskSchema = Schema({
     _id: String,
