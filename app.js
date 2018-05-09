@@ -134,7 +134,7 @@ app.post('/user', function (req, res) {
     }else{
         var hashedPassword = bcrypt.hashSync(req.body.password, 8);
         req.body.password = hashedPassword;
-
+        console.log(req.body);
         dataUserLayer.addUser(req.body, function(){
             var token = jwt.sign({ id: req.body.email }, superSecret, {
                 expiresIn: 86400 // expires in 24 hours

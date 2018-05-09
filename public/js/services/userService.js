@@ -27,6 +27,27 @@ routingApp.factory('userService', ['$http', '$rootScope', function($http, $rootS
 
     };
 
+    serv.register = function (name, email, password, cb) {
+        var req = {
+            email: email,
+            password: password,
+            name: name
+        };
+        console.log('dans fonction register');
+        $http.post('/user',req).then(function (resp) {
+            console.log('dans post register');
+            console.log(req);
+            if (resp.data.success) {
+                localStorage.loginToken = resp.data.token;
+                $http.defaults.headers.common.Authorization = resp.data.token;
+                console.log('Register successfull');
+                $rootScope.isLogged = true;
+            }
+            cb(resp.data.success);
+        });
+
+    };
+
     serv.logout = function () {
         if (localStorage.loginToken != null) localStorage.loginToken = null;
         else console.log('Already logged out');

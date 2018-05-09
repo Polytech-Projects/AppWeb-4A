@@ -15,16 +15,24 @@ routingApp.config(function ($stateProvider, $urlRouterProvider) {
 		controller: 'todoListCtrl'
 	};
 
-	var login = {
+	var loginState = {
 		name: 'login',
 		url: '/login',
 		templateUrl: 'vue_login.html',
 		controller: 'LoginCtrl'
 	};
 
+	var registerState = {
+		name: 'register',
+		url: '/register',
+		templateUrl: 'vue_register.html',
+		controller: 'registerCtrl'
+	};
+
 	$stateProvider.state(homeState);
 	$stateProvider.state(todoListState);
-	$stateProvider.state(login);
+	$stateProvider.state(loginState);
+	$stateProvider.state(registerState);
 
 	$urlRouterProvider.otherwise('/');
 });

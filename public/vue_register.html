@@ -1,0 +1,15 @@
+<div class="div-login text-center">
+    <form class="form-signin" ng-submit="register()">
+        <h1 class="h3 mb-3 font-weight-normal">Enregistrez-vous</h1>
+        <label for="inputName" class="sr-only">Nom</label>
+        <input ng-model="name" type="text" id="inputName" class="form-control" placeholder="Votre pseudo" required autofocus>
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input ng-model="email" type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+        <label for="inputPassword" class="sr-only">Mot de passe</label>
+        <input ng-model="password" type="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
+        <label for="inputPasswordBis" class="sr-only">Confimation mot de passe</label>
+        <input ng-model="passwordBis" type="password" id="inputPasswordBis" class="form-control" placeholder="Retapper votre mot de passe" required>
+        <p class="form-control text-danger" ng-if="invalidPwd==true">Les mots de passes ne correspondent pas !</p>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">S'inscrire !</button>
+    </form>
+</div>
