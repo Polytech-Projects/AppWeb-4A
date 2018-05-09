@@ -10,7 +10,7 @@
 ## Dépendances
 
 Avoir toutes les dépendances cités plus haut installé.  
-Pour la base de donnée MongoDB, créer un table grâce à Compass. Se souvenir du nom de la table.
+Pour la base de donnée MongoDB, créer une table grâce à Compass. Se souvenir du nom de la table.
 
 ## Projet
 
