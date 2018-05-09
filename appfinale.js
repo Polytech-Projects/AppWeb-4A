@@ -34,8 +34,8 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.use(express.static(path.join(__dirname,'public')));
 
-app.post('/getTaskSet', function(req, res) {
-    dataTaskLayer.getTaskSet(function(taskSet) {
+app.post('/getTaskSet', verifyToken, function(req, res, next) {
+    dataTaskLayer.getTaskSet(req.user_id, function(taskSet) {
         var obj = {
             success: true,
             taskSet: taskSet
@@ -44,19 +44,20 @@ app.post('/getTaskSet', function(req, res) {
     });
 });
 
-app.post('/addTask', function(req, res){
+app.post('/addTask', verifyToken, function(req, res, next){
 
-    if(!req.body.name){
+    if(!req.body.name || !req.user_id){
         res.send(
             {
                 success:false,
-                errorSet:['TASKNAME_EMPTY']
+                errorSet:['TASKNAME_EMPTY', 'TASKNAME_REF_EMPTY']
             }
         );
     }else{
         var task = {
             id:uuidv4(),
             name:req.body.name,
+            ref: req.user_id,
             done:false
         };
         dataTaskLayer.addTask(task, function(){
@@ -65,7 +66,7 @@ app.post('/addTask', function(req, res){
     }
 });
 
-app.post('/findById', function(req,res){
+app.post('/findById', verifyToken, function(req,res, next){
     if(!req.body.id){
         res.send(
             {
@@ -80,7 +81,7 @@ app.post('/findById', function(req,res){
     }
 });
 
-app.post('/updateTask', function(req,res){
+app.post('/updateTask', verifyToken, function(req,res, next){
     if(!req.body.name && !req.body.done && !req.body.id){
         res.send(
             {
@@ -92,7 +93,8 @@ app.post('/updateTask', function(req,res){
         var task = {
             id:req.body.id,
             name:req.body.name,
-            done:req.body.done
+            done:req.body.done,
+            ref:req.user_id // Devrait vérifier que cette tâche appartient bien à l'utilisateur
         };
         dataTaskLayer.updateTask(task, function(){
             res.send({ success:true });
@@ -100,7 +102,7 @@ app.post('/updateTask', function(req,res){
     }
 });
 
-app.post('/deleteTask', function(req,res){
+app.post('/deleteTask', verifyToken, function(req,res, next){
     if(!req.body.id){
         res.send(
             {
@@ -142,7 +144,7 @@ app.post('/user', function (req, res) {
 
 // RETURNS ALL THE USERS IN THE DATABASE
 app.get('/user', function (req, res) {
-    dataUserLayer.getTaskSet(function(userSet) {
+    dataUserLayer.getUserSet(function(userSet) {
         var obj = {
             success: true,
             userSet: userSet
@@ -208,21 +210,7 @@ app.put('/user/:id', function (req, res) {
 });
 
 app.get('/me', verifyToken, function(req, res, next) {
-    //var token = req.headers['x-access-token'];
-    //if (!token) return res.status(401).send({ success: false, errorSet: ['NO_TOKEN'] });
-    //
-    //jwt.verify(token, superSecret, function(err, decoded) {
-    //    if (err) return res.status(500).send({ success: false, errorSet: ['FAILED_AUTHENTIFICATION'] });
-    //    
-    //    dataUserLayer.findUserById(decoded.id, function (user) {
-    //        if (err) return res.status(500).send("There was a problem finding the user.");
-    //        if (!user) return res.status(404).send("No user found.");
-    //        
-    //        //res.status(200).send(user);
-    //        next(user);
-    //    });
-    //});
-    dataUserLayer.findUserById(req.id, function (user) {
+    dataUserLayer.findUserById(req.user_id, function (user) {
         if (!user) return res.status(404).send("No user found.");
         
         res.status(200).send(user);
@@ -250,14 +238,14 @@ app.use(function (user, req, res, next) {
 });
 
 function verifyToken(req, res, next) {
-    var token = req.headers['x-access-token'];
+    var token = req.headers['authorization'];
     if (!token)
         return res.status(403).send({ success: false, errorSet: ['No token provided.'] });
     jwt.verify(token, superSecret, function(err, decoded) {
         if (err)
-            return res.status(500).send({ success: false, errorSet: ['Failed to authenticate token.'] });
+            return res.status(200).send({ success: false, errorSet: ['Failed to authenticate token.'] });
         // if everything good, save to request for use in other routes
-        req.id = decoded.id;
+        req.user_id = decoded.id;
         next();
     });
 }

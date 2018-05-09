@@ -4,23 +4,19 @@
 		<meta charset="utf-8" />
 		<title>Route App</title>
 		<link rel="stylesheet" href="css/bootstrap.min.css"/>
-		<!-- Mettre angular.min.js angular-ui-router.min.js app.js pageCtrl.js -->
+		<link rel="stylesheet" href="css/login.css"/>
+		<link rel="stylesheet" href="css/todolist.css"/>
 		<script type="text/javascript" src="js/angular.min.js"></script>
 		<script type="text/javascript" src="js/angular-ui-routeur.min.js"></script>
-		<script type="text/javascript" src="js/routeApp.js"></script>
-		<script type="text/javascript" src="js/computeService.js"></script>
-		<script type="text/javascript" src="js/todoService.js"></script>
-		<script type="text/javascript" src="js/page1Ctrl.js"></script>
-		<script type="text/javascript" src="js/page2Ctrl.js"></script>
-		<script type="text/javascript" src="js/page3Ctrl.js"></script>
-		<script type="text/javascript" src="js/page4Ctrl.js"></script>
-		<script type="text/javascript" src="js/page5Ctrl.js"></script>
-		<script type="text/javascript" src="js/page6Ctrl.js"></script>
-		<script type="text/javascript" src="js/hello.js"></script>
+		<script type="text/javascript" src="js/config/routeApp.js"></script>
+		<script type="text/javascript" src="js/services/todoService.js"></script>
+		<script type="text/javascript" src="js/services/userService.js"></script>
+		<script type="text/javascript" src="js/controller/todoListCtrl.js"></script>
+		<script type="text/javascript" src="js/controller/loginCtrl.js"></script>
 	</head>
-	<body>
+	<body ng-controller="LoginCtrl">
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="/">Mon super site</a>
+			<a class="navbar-brand" href="/">Application Todo liste</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -31,25 +27,13 @@
 						<a ui-sref="home" ui-sref-active="active" class="nav-link">Acceuil</a>
 					</li>
 					<li class="nav-item">
-						<a ui-sref="page1" ui-sref-active="active" class="nav-link">Page 1</a>
+						<a ui-sref="todoList" ui-sref-active="active" class="nav-link">Mes notes</a>
 					</li>
-					<li class="nav-item">
-						<a ui-sref="page2" ui-sref-active="active" class="nav-link">Page 2</a>
+					<li class="nav-item" ng-if="isLogged==false">
+						<button ui-sref="login" ui-sref-active="active" class="nav-link btn">Login</button>
 					</li>
-					<li class="nav-item">
-						<a ui-sref="page3" ui-sref-active="active" class="nav-link">Page 3</a>
-					</li>
-					<li class="nav-item">
-						<a ui-sref="page4" ui-sref-active="active" class="nav-link">Page 4</a>
-					</li>
-					<li class="nav-item">
-						<a ui-sref="page5" ui-sref-active="active" class="nav-link">Page 5</a>
-					</li>
-					<li class="nav-item">
-						<a ui-sref="page6" ui-sref-active="active" class="nav-link">Page 6</a>
-					</li>
-					<li class="nav-item">
-						<a ui-sref="hello" ui-sref-active="active" class="nav-link">Hello</a>
+					<li class="nav-item" ng-if="isLogged==true">
+						<button ng-click="logout()" class="nav-link btn">Logout</button>
 					</li>
 				</ul>
 			</div>

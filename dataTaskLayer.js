@@ -11,28 +11,15 @@ mongoose.connect('mongodb://localhost/tp_6', function(err) {
 var TaskSchema = Schema({
     _id: String,
     name: String,
-    done: Boolean
+    done: Boolean,
+    ref: String
 });
 
 var TaskModel = mongoose.model('Tasks', TaskSchema);
-/*
-TaskModel.find({
-    _id: 'lekjerlgkjerlfkjerlkfjelrkjerlkgj', function(err, task) {
-        if(err) {throw err;}
-        console.log(task);
-    }
-});
 
-TaskModel.update({
-    _id: 'lekjerlgkjerlfkjerlkfjelrkjerlkgj', function(err) {
-        if(err) {throw err;}
-        console.log('modifié');
-    }
-});
-*/
 module.exports = {
-    getTaskSet: function(cb) {
-        TaskModel.find(null, function(err, taskSet) {
+    getTaskSet: function(ref, cb) {
+        TaskModel.find({ref: ref}, function(err, taskSet) {
             if (err)
                 throw err;
             else
@@ -71,7 +58,8 @@ module.exports = {
         var taskToSave = new TaskModel({
             _id:task.id,
             name:task.name,
-            done:task.done
+            done:task.done,
+            ref:task.ref
         });
         taskToSave.save(function(err){
             if(err){

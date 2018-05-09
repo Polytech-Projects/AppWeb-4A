@@ -1,0 +1,28 @@
+<div class="container">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="todolist not-done">
+				<h1>Todo liste</h1>
+				<form ng-submit="addTask()">
+					<input type="text" class="form-control add-todo" placeholder="Que devez-vous faire ?" ng-model="taskInputName" />
+					<button class="btn btn-success" type="submit">Sauvegarder</button>
+				</form>
+				<hr>
+				<div ng-show="taskList.length">
+					<ul id="sortable" class="list-unstyled">
+						<li ng-repeat="task in taskList track by $index" class="ui-state-default row">
+							<div class="checkbox">
+								<input type="checkbox" ng-model="task.done" ng-click="update(task)" />
+								<label>{{task.name}}</label>
+								<button ng-click="delete(task)" class="btn btn-outline-secondary text-white bg-danger" type="button">Supprimer</button>
+							</div>
+						</li>
+					</ul>
+					<div class="todo-footer">
+						<strong>Tâches restantes {{taskLeft}}</strong>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

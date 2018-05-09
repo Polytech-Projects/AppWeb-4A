@@ -1,4 +1,4 @@
-routingApp.controller('Page6Ctrl', ['$scope', '$http', 'todoService', function($scope, $http, todoService) {
+routingApp.controller('todoListCtrl', ['$scope', '$http', 'todoService', function($scope, $http, todoService) {
 	
     $scope.taskList = [];
 
@@ -18,7 +18,6 @@ routingApp.controller('Page6Ctrl', ['$scope', '$http', 'todoService', function($
     };
 
     $scope.addTask = function(){
-
         todoService.addTask($scope.taskInputName, function(res){
             if(res){
                 $scope.load();
@@ -38,7 +37,6 @@ routingApp.controller('Page6Ctrl', ['$scope', '$http', 'todoService', function($
         var index = $scope.taskList.indexOf(task);
         // On vire direct la tache sans attendre de retour serveur
         $scope.taskList.splice(index,1);
-        // TODO : implémenter la fonction dans todoService
         todoService.deleteTask(task._id, function(res){
             $scope.load();
         });
@@ -47,6 +45,7 @@ routingApp.controller('Page6Ctrl', ['$scope', '$http', 'todoService', function($
     $scope.load = function(){
         todoService.getTaskSet(function(res){
             $scope.taskList = res;
+            $scope.taskLeft = $scope.howManyNotDone();
         });
     };
 

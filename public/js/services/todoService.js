@@ -1,4 +1,4 @@
-routingApp.factory('todoService', ['$http', function($http) {
+routingApp.factory('todoService', ['$http', '$state', 'userService', function($http, $state, userService) {
 
     var serv = {};
 
@@ -8,16 +8,22 @@ routingApp.factory('todoService', ['$http', function($http) {
         };
 
         $http.post('/addTask',req).then(function (resp) {
-                //console.log(resp);
-                cb(resp);
-            });
+            console.log('todoService: requete HTTP ->');
+            console.log(req);
+            cb(resp);
+        });
 
     };
 
     serv.getTaskSet = function (cb) {
         $http.post('/getTaskSet')
             .then(function (resp) {
-                console.log(resp);
+                if(!resp.data.success) {
+                    if (resp.data.errorSet[0] == ["Failed to authenticate token."]) {
+                        userService.logout();
+                        $state.go('login');
+                    }
+                }
                 cb(resp.data.taskSet);
             });
 
